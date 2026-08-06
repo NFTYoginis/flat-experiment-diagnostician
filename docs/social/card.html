@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI Diagnosticians — social card template</title>
+
+<!--
+  ═══════════════════════════════════════════════════════════════════════════
+  AI DIAGNOSTICIANS · SOCIAL CARD TEMPLATE
+  1280×640 · one asset serves GitHub Pages og:image + repo Social preview
+  ═══════════════════════════════════════════════════════════════════════════
+
+  TO MAKE THE NEXT CARD, change ONE line — the <h1> in the body below.
+  Everything else is family furniture and stays fixed.
+
+  Or leave the file alone and pass the headline in the URL:
+      card.html?line=Before%20you%20tell%20them%20to%20drop%20the%20price.
+
+  RENDER (macOS, no dependencies):
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+        --headless --disable-gpu --hide-scrollbars \
+        --force-device-scale-factor=2 --window-size=1280,640 \
+        --virtual-time-budget=2000 \
+        --screenshot=out@2x.png "file://$PWD/card.html"
+      sips --resampleWidth 1280 out@2x.png --out og-<name>.png
+
+  Render at 2× and downsample: the 15px mono wordmark and the 1px rules are
+  the parts that fall apart at 1×.
+
+  LOCKED DECISIONS — see README.md in this folder before changing any of them.
+  ═══════════════════════════════════════════════════════════════════════════
+-->
+
+<style>
+  /* Palette lifted verbatim from docs/index.html :root (light theme).
+     The card is light-only. og:images do not respond to prefers-color-scheme,
+     so there is no dark variant to keep in sync. */
+  :root{
+    --paper:#faf8f5;
+    --ink:#16130f;
+    --muted:#5f584f;
+    --line:#e2dcd3;
+    --accent:#8a3324;
+    --tick:#cfc7bb;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper)}
+  body{
+    width:1280px;height:640px;
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+    overflow:hidden;
+  }
+
+  /* ── SAFE AREA ────────────────────────────────────────────────────────────
+     1150×510 centred in 1280×640 = a uniform 65px inset on all four sides.
+     Every mark of ink lives inside it. Outside is bare paper, on purpose:
+     the card gets cropped and corner-rounded differently by every surface
+     that renders it, so there is nothing out there to lose.               */
+  .safe{
+    position:absolute; left:65px; top:65px;
+    width:1150px; height:510px;
+    display:grid; grid-template-rows:auto minmax(0,1fr) auto;
+  }
+
+  /* ── TIER 3 · masthead ────────────────────────────────────────────────── */
+  .masthead{display:flex;align-items:center;gap:14px}
+  .mark{flex:0 0 auto;display:block}
+  .wordmark{
+    font-family:var(--mono); font-size:16px; font-weight:500;
+    letter-spacing:.155em; text-transform:uppercase; color:var(--muted);
+    line-height:1;
+  }
+  .rule{height:1px;background:var(--line);border:0}
+  .masthead-rule{margin-top:17px}
+
+  /* ── TIER 1 · the line ────────────────────────────────────────────────────
+     Set as the site's own pull-quote: 5px oxblood rule, 34px gutter.
+     (docs/index.html .pull = 3px accent border + 22px padding, scaled up.)   */
+  .lineBox{display:flex;align-items:center;min-height:0}
+  h1{
+    font-family:var(--serif); font-weight:600;
+    line-height:1.06; letter-spacing:-.021em; color:var(--ink);
+    border-left:5px solid var(--accent);
+    padding-left:34px;
+    width:100%;
+    text-wrap:balance; hyphens:none;
+    font-size:104px; /* provisional — the fitter below sets the real value */
+  }
+
+  /* ── TIER 2 · footnote ───────────────────────────────────────────────────
+     Constant across every card in the family. Compressed from the repo
+     README's own sentence; no new claims introduced.                       */
+  .footnote-rule{margin-bottom:18px}
+  .footnote{
+    font-family:var(--sans); font-size:19px; line-height:1.5;
+    color:var(--muted); letter-spacing:.004em;
+  }
+</style>
+</head>
+<body>
+
+<div class="safe">
+
+  <div>
+    <div class="masthead">
+      <!-- Family mark: a baseline with four stages, the third fallen below it.
+           The one rule every diagnostician in the family runs on — find the
+           earliest stage under baseline. Domain-neutral, so it survives
+           whatever the next four turn out to diagnose. -->
+      <svg class="mark" viewBox="0 0 38 25" width="38" height="25" aria-hidden="true">
+        <line x1="2" y1="10" x2="36" y2="10" stroke="#b8ad9e" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="6"    cy="10" r="2.4" fill="#5f584f"/>
+        <circle cx="14.5" cy="10" r="2.4" fill="#5f584f"/>
+        <circle cx="31.5" cy="10" r="2.4" fill="#5f584f"/>
+        <line x1="23" y1="11" x2="23" y2="17" stroke="#8a3324" stroke-width="1.1"/>
+        <circle cx="23" cy="19.5" r="2.7" fill="#8a3324"/>
+      </svg>
+      <span class="wordmark">AI Diagnosticians</span>
+    </div>
+    <hr class="rule masthead-rule">
+  </div>
+
+  <div class="lineBox" id="lineBox">
+
+    <!-- ════════════════════ SWAP THIS ONE LINE ════════════════════ -->
+    <h1 id="line">Before you tell them to drop the price.</h1>
+    <!-- ═════════════════════════════════════════════════════════════ -->
+
+  </div>
+
+  <div>
+    <hr class="rule footnote-rule">
+    <p class="footnote">Works backward from what already failed. Names one cause. Stops before prescribing.</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* Headline may come from ?line= so a card can be rendered without editing
+     the file. Falls back to the <h1> above. */
+  var h  = document.getElementById('line');
+  var qs = new URLSearchParams(location.search).get('line');
+  if (qs) h.textContent = qs;
+
+  /* ── FONT GUARD ───────────────────────────────────────────────────────────
+     Iowan Old Style is a macOS system face. It is NOT embedded — this repo is
+     MIT and the font is not redistributable, so the card references it by name
+     and ships only the rendered PNG. On a machine without it the stack falls
+     through to Palatino → Book Antiqua → Georgia, which changes the metrics.
+     Fail loudly rather than let card 4 quietly ship in the wrong face. */
+  function resolves(name){
+    var c = document.createElement('canvas').getContext('2d');
+    var p = 'Hamburgefonstiv 0123456789';
+    c.font = '100px "__no_such_family__", serif';
+    var base = c.measureText(p).width;
+    c.font = '100px "' + name + '", "__no_such_family__", serif';
+    return Math.abs(c.measureText(p).width - base) > 0.5;
+  }
+  var serifOK = resolves('Iowan Old Style');
+  if (!serifOK) {
+    console.warn('[card] WARNING: Iowan Old Style did not resolve. Falling back — ' +
+                 'this card will not match the landing page or cards 1–N.');
+  }
+
+  /* ── FIT ──────────────────────────────────────────────────────────────────
+     Start at 104px and step down until the line fits the middle row with
+     BREATH to spare. 104 is the ceiling because at 1111px of text width it is
+     the largest size that still lets a ~20-character line sit on one line.
+     Floor is 60px: below that the headline stops out-shouting the footnote at
+     thumbnail size, which is the whole job. If a future line hits the floor,
+     it is too long for this format — cut the line, do not lower the floor. */
+  var MAX = 104, MIN = 60, BREATH = 44, MAX_LINES = 3;
+  var box   = document.getElementById('lineBox');
+  var avail = box.clientHeight - BREATH;
+  var size  = MAX;
+
+  /* Exact line count. Deriving it from scrollHeight/line-height rounds wrong
+     at the boundary, and the boundary is where this matters. */
+  function lineCount(el){
+    var r = document.createRange(); r.selectNodeContents(el);
+    return r.getClientRects().length;
+  }
+  function overflows(){
+    return h.scrollHeight > avail || h.scrollWidth > box.clientWidth || lineCount(h) > MAX_LINES;
+  }
+
+  h.style.fontSize = size + 'px';
+  while (size > MIN && overflows()) {
+    size -= 1;
+    h.style.fontSize = size + 'px';
+  }
+
+  var lines = lineCount(h);
+  var fits  = !overflows();
+  document.documentElement.setAttribute('data-size',  size);
+  document.documentElement.setAttribute('data-lines', lines);
+  document.documentElement.setAttribute('data-fits',  fits ? 'yes' : 'NO');
+  document.documentElement.setAttribute('data-serif', serifOK ? 'iowan' : 'FALLBACK');
+  if (!fits) {
+    console.warn('[card] WARNING: headline hit the ' + MIN + 'px floor and still does not fit ' +
+                 'in ' + MAX_LINES + ' lines. This line is too long for the format. ' +
+                 'Cut the line — do not lower the floor.');
+  }
+  console.log('[card] headline=' + size + 'px lines=' + lines +
+              ' avail=' + avail + 'px fits=' + (fits?'yes':'NO') + ' serif=' + (serifOK ? 'Iowan Old Style' : 'FALLBACK'));
+})();
+</script>
+</body>
+</html>

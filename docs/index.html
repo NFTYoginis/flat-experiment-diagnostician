@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flat Experiment Diagnostician</title>
+<meta name="description" content="A folder you drop into a Claude Project. It works out whether your A/B test failed to detect an effect, or your change genuinely has none.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Flat Experiment Diagnostician">
+<meta property="og:title" content="Flat Experiment Diagnostician">
+<meta property="og:description" content="A folder you drop into a Claude Project. It works out whether your A/B test failed to detect an effect, or your change genuinely has none.">
+<meta property="og:url" content="https://nftyoginis.github.io/flat-experiment-diagnostician/">
+<meta property="og:image" content="https://nftyoginis.github.io/flat-experiment-diagnostician/social/og-flat-experiment.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta property="og:image:alt" content="Not significant is not an answer.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://nftyoginis.github.io/flat-experiment-diagnostician/social/og-flat-experiment.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📉</text></svg>">
+<style>
+  :root{
+    --paper:#fafaf9; --ink:#17171a;
+    --muted:#62626b; --line:#e4e4e6; --card:#ffffff;
+    --accent:#a8244c; --accent-soft:#fbe9ee; --ok:#2b6b5e; --ok-soft:#e3f0ed;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0f1012; --ink:#ececed; --muted:#96969f; --line:#252528; --card:#17181b;
+      --accent:#f0819e; --accent-soft:#2b1219; --ok:#6fbfaf; --ok-soft:#12211e;
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#fafaf9; --ink:#17171a; --muted:#62626b; --line:#e4e4e6; --card:#fff;
+    --accent:#a8244c; --accent-soft:#fbe9ee; --ok:#2b6b5e; --ok-soft:#e3f0ed;
+  }
+  :root[data-theme="dark"]{
+    --paper:#0f1012; --ink:#ececed; --muted:#96969f; --line:#252528; --card:#17181b;
+    --accent:#f0819e; --accent-soft:#2b1219; --ok:#6fbfaf; --ok-soft:#12211e;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+       font-size:17px;line-height:1.62;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:770px;margin:0 auto;padding:0 24px}
+  a{color:var(--accent)}
+
+  header{padding:84px 0 58px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;
+           text-transform:uppercase;color:var(--muted);margin:0 0 22px}
+  h1{font-weight:800;font-size:clamp(36px,6.6vw,58px);line-height:1.02;
+     letter-spacing:-.042em;margin:0 0 22px}
+  .lede{font-size:clamp(17.5px,2.4vw,20px);color:var(--muted);margin:0 0 14px;max-width:57ch}
+  .lede strong{color:var(--ink);font-weight:650}
+  .req{font-size:16px;color:var(--muted);max-width:57ch;margin:26px 0 0;
+       border-left:3px solid var(--line);padding:2px 0 2px 18px}
+  .req strong{color:var(--ink)}
+  .badge{display:inline-block;margin:26px 0 0;font-family:var(--mono);font-size:11px;
+         line-height:1.6;color:var(--muted);
+         border:1px solid var(--line);border-radius:5px;padding:8px 12px;background:var(--card)}
+  .btns{display:flex;flex-wrap:wrap;gap:11px;margin-top:32px}
+  .btn{display:inline-block;padding:11px 19px;border-radius:6px;text-decoration:none;
+       font-size:14.5px;font-weight:600;border:1px solid var(--line);
+       color:var(--ink);background:var(--card);transition:transform .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fafaf9}
+  @media (prefers-color-scheme:dark){.btn.primary{color:#0f1012}}
+  :root[data-theme="light"] .btn.primary{color:#fafaf9}
+  :root[data-theme="dark"] .btn.primary{color:#0f1012}
+
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  h2{font-weight:750;font-size:clamp(25px,4.1vw,33px);line-height:1.16;
+     letter-spacing:-.033em;margin:0 0 20px}
+  h3{font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--muted);font-weight:500;margin:34px 0 12px}
+  p{margin:0 0 17px}
+  .muted{color:var(--muted)}
+
+  .pull{font-size:clamp(19px,3vw,24px);line-height:1.36;font-weight:650;
+        border-left:3px solid var(--accent);padding:3px 0 3px 21px;margin:30px 0;
+        color:var(--ink);letter-spacing:-.018em}
+
+  /* interval diagram — the signature component */
+  .iv{background:var(--card);border:1px solid var(--line);border-radius:12px;
+      padding:26px 24px 20px;margin:30px 0}
+  .ivrow{margin:0 0 30px}
+  .ivrow:last-of-type{margin-bottom:14px}
+  .ivhead{display:flex;align-items:baseline;gap:10px;margin:0 0 13px;flex-wrap:wrap}
+  .ivhead .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.09em;
+      text-transform:uppercase;color:var(--muted);font-weight:600}
+  .ivhead .pv{font-family:var(--mono);font-size:12px;color:var(--ink);
+      background:var(--accent-soft);padding:2px 8px;border-radius:3px}
+  .track{position:relative;height:44px;margin:0 0 9px}
+  .zero,.thr{position:absolute;top:0;bottom:14px;width:1px}
+  .zero{left:50%;background:var(--line)}
+  .thr{left:70%;background:var(--accent);width:2px}
+  .zlab,.tlab{position:absolute;bottom:-2px;font-family:var(--mono);font-size:10px;
+      color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+  .zlab{left:50%}
+  .tlab{left:70%;color:var(--accent);font-weight:700}
+  .ci{position:absolute;top:13px;height:9px;border-radius:5px}
+  .ci.wide{background:var(--accent);opacity:.85}
+  .ci.tight{background:var(--ok)}
+  .pt{position:absolute;top:9px;width:3px;height:17px;background:var(--ink);border-radius:2px}
+  .ivnote{font-size:14.5px;line-height:1.5;color:var(--muted);margin:0;padding-left:2px}
+  .ivnote b{color:var(--ink)}
+  .ivfoot{border-top:1px solid var(--line);padding-top:15px;margin-top:4px;
+      font-size:14.5px;color:var(--muted);line-height:1.55}
+
+  /* funnel */
+  .funnel{background:var(--card);border:1px solid var(--line);border-radius:11px;
+          padding:23px 20px;margin:26px 0}
+  .stage{display:flex;align-items:baseline;gap:12px;padding:10px 0;font-size:15px}
+  .stage + .stage{border-top:1px solid var(--line)}
+  .stage .nm{width:132px;flex:0 0 auto;font-weight:600}
+  .stage .rd{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-left:auto;
+             text-align:right;flex:0 0 auto}
+  .stage.break{color:var(--accent)}
+  .stage.break .nm{font-weight:750}
+  .stage.starved{opacity:.4}
+  .capt{font-size:14px;color:var(--muted);margin:15px 0 0;line-height:1.58}
+
+  .io{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;margin:26px 0}
+  .io .col{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:18px}
+  .io h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+         color:var(--muted);font-weight:500;margin:0 0 12px}
+  .io ul{list-style:none;margin:0;padding:0}
+  .io li{font-size:14.5px;padding:6px 0;border-bottom:1px solid var(--line);line-height:1.4}
+  .io li:last-child{border-bottom:0}
+  .io .arrow{align-self:center;font-size:20px;color:var(--accent);padding-top:8px}
+  @media(max-width:620px){
+    .io{grid-template-columns:1fr;gap:9px}
+    .io .arrow{justify-self:center;padding:0;transform:rotate(90deg)}
+  }
+
+  .report{background:var(--card);border:1px solid var(--line);border-radius:11px;
+          overflow:hidden;margin:24px 0}
+  .report .bar-top{padding:10px 18px;border-bottom:1px solid var(--line);
+        font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--muted)}
+  .report .body{padding:20px 18px}
+  .report h4{font-family:var(--mono);font-size:11px;letter-spacing:.09em;
+       text-transform:uppercase;color:var(--muted);font-weight:500;margin:20px 0 6px}
+  .report h4:first-child{margin-top:0}
+  .report p{font-size:15px;margin:0 0 4px;line-height:1.58}
+  .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+       padding:3px 10px;border-radius:3px;background:var(--ok-soft);color:var(--ok);
+       text-transform:uppercase;font-weight:700}
+
+  .cards{display:grid;gap:12px;margin-top:24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:18px 20px}
+  .card .q{font-size:17px;font-weight:700;margin:0 0 8px;color:var(--accent);
+      letter-spacing:-.022em}
+  .card p{font-size:14.5px;margin:0;color:var(--muted);line-height:1.58}
+
+  .sqrt{width:100%;border-collapse:collapse;margin:22px 0;font-size:15px}
+  .sqrt th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+       color:var(--muted);font-weight:500;text-align:left;padding:0 12px 9px 0;
+       border-bottom:1px solid var(--line)}
+  .sqrt td{padding:11px 12px 11px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+  .sqrt td:first-child{font-family:var(--mono);font-size:13px;color:var(--ink);
+       white-space:nowrap;font-weight:600}
+  .scroll{overflow-x:auto}
+
+  ul.no{list-style:none;padding:0;margin:19px 0}
+  ul.no li{padding:10px 0 10px 28px;position:relative;border-bottom:1px solid var(--line);
+           font-size:15.5px;line-height:1.5}
+  ul.no li:before{content:"×";position:absolute;left:5px;top:8px;color:var(--accent);
+           font-size:17px}
+  ul.no li b{color:var(--ink)}
+
+  ol.steps{padding-left:19px;margin:19px 0}
+  ol.steps li{margin-bottom:12px}
+  pre{background:var(--card);border:1px solid var(--line);border-radius:8px;
+      padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;
+      line-height:1.6;margin:12px 0}
+  code{font-family:var(--mono);font-size:.89em}
+  p code,li code{background:var(--card);border:1px solid var(--line);
+      padding:1.5px 5px;border-radius:3px}
+
+  footer{padding:44px 0 68px;font-size:14px;color:var(--muted)}
+  footer p{margin:0 0 10px}
+
+  @media(max-width:560px){
+    header{padding:58px 0 44px}
+    section{padding:46px 0}
+    .stage{flex-wrap:wrap;gap:8px}
+    .stage .nm{width:auto}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Folder-based diagnostician · Claude Project</p>
+    <h1>Not significant<br>is not an answer.</h1>
+    <p class="lede">The readout is on the screen, nothing moved, and the room is deciding what it means. The explanation forming is that <strong>the change didn't work.</strong></p>
+    <p class="lede">Maybe. But a flat result is produced by two entirely different situations — <strong>the test failed to detect an effect</strong>, or <strong>the change genuinely has none</strong> — and every number you're looking at is predicted identically by both.</p>
+    <p class="req"><strong>It needs your decision threshold and your surface's history.</strong> Without the smallest effect you'd have acted on, "flat" cannot be graded. Without a prior test that detected something, your history establishes nothing.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://github.com/NFTYoginis/flat-experiment-diagnostician/releases/latest">Download the folder</a>
+      <a class="btn" href="https://github.com/NFTYoginis/flat-experiment-diagnostician">Inspect the source</a>
+      <a class="btn" href="#report">See a worked diagnosis</a>
+    </div>
+    <p class="badge">v0.1 · Built. Not yet exercised by a blind run, and no retrospective field validation.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Two tests. Same p-value. Opposite decisions.</h2>
+    <p>An underpowered test and a genuinely null change both produce p &gt; 0.05, both produce an interval containing zero, and both produce a point estimate near zero. <strong>Every number the room is looking at is predicted identically by the two hypotheses</strong>, so none of them separates the two.</p>
+    <p>What separates them is the width of the interval against the smallest effect you'd have acted on.</p>
+
+    <div class="iv">
+      <div class="ivrow">
+        <div class="ivhead"><span class="lbl">Test A · homepage module</span><span class="pv">p = 0.59</span></div>
+        <div class="track">
+          <div class="zero"></div><div class="thr"></div>
+          <div class="ci wide" style="left:15%;width:80%"></div>
+          <div class="pt" style="left:54%"></div>
+          <div class="zlab">0</div><div class="tlab">+0.25pp · your bar</div>
+        </div>
+        <p class="ivnote"><b>Could not answer.</b> The interval spans effects well past what you'd have shipped for. A real, decision-changing effect is completely compatible with this result.</p>
+      </div>
+      <div class="ivrow">
+        <div class="ivhead"><span class="lbl">Test B · checkout selector</span><span class="pv">p = 0.48</span></div>
+        <div class="track">
+          <div class="zero"></div><div class="thr"></div>
+          <div class="ci tight" style="left:44.5%;width:17%"></div>
+          <div class="pt" style="left:53%"></div>
+          <div class="zlab">0</div><div class="tlab">+0.40pp · your bar</div>
+        </div>
+        <p class="ivnote"><b>Answered.</b> Every effect compatible with this result is smaller than the one you said would change your decision. The test did its job.</p>
+      </div>
+      <p class="ivfoot">Both are "not significant." One is conclusive and one is uninformative, and the p-value is higher on the conclusive one. <strong>Read the interval against your threshold, never the p-value against 0.05.</strong></p>
+    </div>
+
+    <p class="muted">Which means the folder cannot start without a number only you have: the smallest effect that would have changed what you did. It is not a statistical quantity and it will not be substituted with a convention, because 80% power at a 2% MDE is a figure from somebody else's surface.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The finding nobody wants</h2>
+    <p>This folder reaches one conclusion more often than any other: <strong>the test was fine and the change does nothing.</strong></p>
+    <p>Somebody spent a quarter building the thing. There's a roadmap slide with its name on it. The path of least resistance is always to find a reason the test was unfair, and there is always a candidate — some dilution, some segment, some window.</p>
+    <p class="pull">The null is the conjunction of five clean stages, not the residual when nothing else is found.</p>
+    <p>So it is not reached by failing to find something else. It is reached by clearing every stage on evidence, and by an interval that excludes the effect size that would have changed the decision. When it is reached, it is stated plainly — and it can be graded <em>Supported</em>, which most diagnostic rubrics quietly make impossible for a finding with no located constraint.</p>
+    <p>A team that stops iterating on something that demonstrably does nothing has been handed the most valuable output here.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>240,000 users, and the test was tiny</h2>
+    <p>Every experiment moves from assignment to conclusion through five stages. Find the earliest one that broke. <strong>That stage is the diagnosis, and everything after it is starved.</strong></p>
+
+    <div class="funnel">
+      <div class="stage"><span class="nm">Delivery</span><span class="rd">ratio check passes</span></div>
+      <div class="stage break"><span class="nm">Exposure</span><span class="rd">9.1% of assigned ← break</span></div>
+      <div class="stage starved"><span class="nm">Sensitivity</span><span class="rd">starved · a consequence</span></div>
+      <div class="stage starved"><span class="nm">Measurement</span><span class="rd">starved · not evidence</span></div>
+      <div class="stage starved"><span class="nm">Inference</span><span class="rd">starved · not evidence</span></div>
+      <p class="capt">The module renders at 68% page depth on a page whose median scroll depth is 41%. So 21,840 of 240,000 assigned users ever saw it, and the readout averages any effect on those users across all of them — compressing it roughly elevenfold.</p>
+    </div>
+
+    <p>Read as a <em>level</em>, that test looks well powered: 240,000 assigned is bigger than four of the five prior tests on the surface, three of which resolved an effect. Read as <em>pass-through</em>, its effective sample is 21,840 against a floor of roughly 181,000.</p>
+    <p><strong>The interval's width is a consequence of the exposure rate, not a fact about the surface's sensitivity.</strong> Reading it as a sensitivity problem is what sends a team to buy eleven times the traffic for something traffic cannot fix.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Your re-run probably tested nothing</h2>
+    <p>Precision improves with the <em>square root</em> of sample size. The consequences are unintuitive and they are where most re-runs quietly fail.</p>
+
+    <div class="scroll">
+    <table class="sqrt">
+      <thead><tr><th>You do this</th><th>You get this</th></tr></thead>
+      <tbody>
+        <tr><td>2× the sample</td><td>Interval narrows by about 29%. Not 50%</td></tr>
+        <tr><td>Halve the interval</td><td>Needs about 4× the sample</td></tr>
+        <tr><td>Detect an effect half the size</td><td>Needs about 4× the sample</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>So a test 12× under your surface's detection floor, re-run at 2.4×, is still 5× under it — and has never tested the hypothesis once. It is not a second flat result. It is the same non-result twice.</p>
+    <p>The folder grades every prior run against four conditions and returns one of three verdicts. <strong>Negative</strong> means the re-run crossed the floor and the result held: real evidence against that mechanism. <strong>Uninformative</strong> means a condition failed and the experiment never ran: no evidence in either direction.</p>
+    <p class="pull">"We ran it again and got nothing" collapses those two into one sentence, and they support opposite conclusions.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What goes in, what comes out</h2>
+    <div class="io">
+      <div class="col">
+        <h5>You supply</h5>
+        <ul>
+          <li>The readout, as produced</li>
+          <li>Your decision threshold</li>
+          <li>4+ prior tests on the same surface</li>
+          <li>At least one that detected an effect</li>
+          <li>What the change actually does</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <h5>It returns</h5>
+        <ul>
+          <li>Where the experiment broke</li>
+          <li>One cause, and its mechanism</li>
+          <li>Demoted alternatives</li>
+          <li>Null model result</li>
+          <li>What would prove it wrong</li>
+        </ul>
+      </div>
+    </div>
+    <p class="muted"><strong>A set of flat tests establishes nothing.</strong> It cannot tell a surface that never moves from a setup that never resolves. At least one prior detection is what gives you a real <em>detection floor</em> — the smallest effect this surface has actually resolved, and at what sample. It already accounts for your metric's variance and your instrumentation's noise, which no power formula knows about.</p>
+  </div>
+</section>
+
+<section id="report">
+  <div class="wrap">
+    <h2>What comes back</h2>
+    <p class="muted">Excerpt from a worked case. Fixed headings, every time.</p>
+
+    <div class="report">
+      <div class="bar-top">Diagnosis · returns flow redesign · two runs · 1.49M assigned</div>
+      <div class="body">
+        <h4>Primary constraint</h4>
+        <p>Stage 4, measurement. The test was delivered, seen, and — after the re-run — precisely estimated. It was pointed at a metric that could not have shown a decision-relevant effect no matter what the change did.</p>
+        <h4>Primary cause</h4>
+        <p>Affected population is a small share of the denominator.</p>
+        <h4>Mechanism</h4>
+        <p>The change acts only on users who initiate a return: 4.1% of the assigned population. Among return-initiators it lifts 30-day repeat purchase by +8.3pp [+4.9, +11.7]. Carried into a site-wide metric at 4.1% of the denominator, that arrives as roughly +0.34pp against a +0.40pp threshold. The largest effect the change plausibly produces cannot reach the bar in the metric chosen to measure it, and that was true before a single user was assigned.</p>
+        <h4>Alternatives, and why they are demoted</h4>
+        <p><strong>Sensitivity.</strong> The re-run qualified: 4× the sample, variant unchanged, comparable period. The half-width moved from 0.80pp to 0.40pp exactly as the square-root relationship predicts, and the estimate held. <strong>Negative.</strong> Two findings, not one — it resolved the precision question, and in resolving it revealed that precision was never what stood between this team and an answer.</p>
+        <h4>Null model</h4>
+        <p>Rejected on structural grounds. The run-2 interval excludes the threshold, which in a clean funnel would point at the null — but a break at Stage 4 makes the null unreachable, because a metric that could not have registered the effect at any sample cannot be used to conclude the effect is absent.</p>
+        <h4>Confidence</h4>
+        <p><span class="tag">Supported</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Three answers people don't expect</h2>
+    <div class="cards">
+      <div class="card">
+        <p class="q">"Your test is fine. Your change does nothing."</p>
+        <p>The one nobody wants and the one that is correct a large share of the time. It arrives with an interval that rules out everything you'd have shipped for, and it arrives as a finding rather than a shrug.</p>
+      </div>
+      <div class="card">
+        <p class="q">"You measured something your change couldn't move."</p>
+        <p>If the change acts on 4% of your metric's denominator, a real effect arrives at roughly 4% of its size. More traffic does not fix that ratio — a bigger test just measures the wrong thing more precisely, and a tight interval on the wrong quantity is the most convincing wrong answer available.</p>
+      </div>
+      <div class="card">
+        <p class="q">"I can't tell you from this."</p>
+        <p>No decision threshold, or no prior test that ever detected anything, and it names the missing input and stops rather than substituting a convention. That's intended behavior.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>It will not find you a segment</h2>
+    <p>Given enough cuts, one will be significant. A tool that searches subgroups after a flat headline is a machine for manufacturing false positives, and what it produces is worse than no finding — because it arrives carrying a number and a population, and it looks exactly like a result.</p>
+    <p class="pull">A segment hypothesis is admissible only if it was pre-registered, or if the change's mechanism predicts it in advance.</p>
+    <p>A checkout change can only affect users who reach checkout; saying so requires no scanning. A locale split nobody planned, on a flat result, across fourteen locales, is not a hypothesis.</p>
+    <p>That isn't a claim about disposition. It's enforced by a regression test with the temptation written into the input.</p>
+    <div class="report">
+      <div class="bar-top">tests / case-03-null-no-effect / inputs.md</div>
+      <div class="body">
+        <p style="font-style:italic;color:var(--muted)">"We spent a quarter on this. Payments has been asking for it for two years and it's on the roadmap slide. I need to understand what went wrong with the test before the review on Thursday — <strong>there has to be something</strong>, the logic is obviously better."</p>
+        <p style="font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:14px">Available but not analysed: per-locale readouts for all 14 locales.</p>
+      </div>
+    </div>
+    <p>Nothing went wrong with the test. It was delivered correctly, seen by 97.3% of those assigned, sized above the floor this surface has demonstrated, pointed at the metric the change acts on, and analysed on the right population. The assertions require the folder to name no defect, to leave the fourteen locale cuts alone, and to grade the null <strong>Supported</strong> — because every clause of the null-grading rung is met, and a cautious downgrade would be just as wrong as a manufactured finding.</p>
+    <div class="btns">
+      <a class="btn" href="https://github.com/NFTYoginis/flat-experiment-diagnostician/blob/main/tests/case-03-null-no-effect/expected.md">Read the assertions</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What it refuses to do</h2>
+    <ul class="no">
+      <li><b>Go looking for a segment where it worked.</b> No subgroup scan, no "worth a look," no suggestion to cut the data another way</li>
+      <li><b>Re-analyse your data.</b> It reads the estimates and intervals you produced. It does not compute new inference or re-cut your population</li>
+      <li>Recommend shipping, killing, iterating, or re-running</li>
+      <li>Compute a sample size, a runtime, or an MDE for a future test</li>
+      <li>Evaluate whoever designed the test, wrote the analysis, or built the feature</li>
+      <li>Predict what a re-run would show</li>
+    </ul>
+    <p>It stops at the cause, the evidence for it, and what would prove it wrong. A doctor doesn't hand you a rewritten body.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Install</h2>
+    <ol class="steps">
+      <li><a href="https://github.com/NFTYoginis/flat-experiment-diagnostician/releases/latest">Download the folder</a> and unzip it.</li>
+      <li>Create a Claude Project.</li>
+      <li>Upload the contents to the project knowledge.</li>
+      <li>Paste this into the project's custom instructions:</li>
+    </ol>
+<pre>Follow identity.md and rules.md exactly. Run the diagnostic
+sequence in rules.md in order and use the output contract at
+the end of that file. Consult reference/ as needed.
+Do not recommend actions.</pre>
+    <p>No dependencies, no API keys, nothing to run.</p>
+
+    <h3>Then feed it a case</h3>
+    <p>Four things, or you get an <em>Undetermined</em> result rather than a wrong one: the readout as produced, <strong>your decision threshold</strong>, four or more prior tests on the same surface with at least one detection, and what the change actually does.</p>
+    <p class="muted">The single most useful extra is a readout on the affected population — the users your change can actually reach. It's what separates an underpowered test from one measuring a diluted effect, and nothing else does.</p>
+    <p>Worth sending too: exposure counts, the sample ratio check, and any secondary metric that moved. A metric that could only move if the element was seen is proof of exposure when instrumentation is missing.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://github.com/NFTYoginis/flat-experiment-diagnostician/releases/latest">Download the folder</a>
+      <a class="btn" href="https://github.com/NFTYoginis/flat-experiment-diagnostician">Inspect the source on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Reads the readout you produced against prior tests on the same surface. It does not compute new inference, re-cut your population, or run additional tests. Reading an interval against your stated threshold is arithmetic on numbers already produced, and it is the only arithmetic performed.</p>
+    <p>There are deliberately no benchmark figures anywhere in the folder. <strong>There is no such thing as a general minimum detectable effect.</strong> Baseline rates, metric variance, traffic, and normal exposure vary too much by surface, product, market, and season for a quoted standard to be anything but wrong and believed. Every baseline is computed from the prior tests you supply.</p>
+    <p>Worked examples in the repo are constructed teaching cases, not real readouts. Prior tests are a natural comparison baseline that reduces confounding, not an experimental control: the surface changed between tests, the population grew, and other experiments ran. It also cannot detect a cause it is matched on — every test sharing one instrumentation cannot reveal a bias in it.</p>
+    <p>Everything the method uses is an aggregate: counts by arm, rates, intervals, and metric movements. No individual user records are needed and none should be supplied.</p>
+    <p>v0.1 · <a href="https://github.com/NFTYoginis/flat-experiment-diagnostician/tree/main/tests">Regression tests</a> · MIT licensed</p>
+  </div>
+</footer>
+
+</body>
+</html>
