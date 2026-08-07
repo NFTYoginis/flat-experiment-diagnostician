@@ -82,9 +82,20 @@ Establish two numbers before anything else:
 
 Then read:
 
-- The interval **excludes** the decision threshold → the test answered the question. The effect,
-  if any, is smaller than the team would act on. Go to Step 5, test the null, and expect to
-  write it.
+- The interval **excludes** the decision threshold → on this screen the test looks like it
+  answered the question, and the null is your likely finding.
+
+  **Do not stop here, and do not go straight to Step 5.** This screen reads one number against
+  one threshold, which is the same shortcut the preamble forbids, one level more sophisticated
+  than reading a p-value. An interval can be precise about a quantity that was never capable of
+  registering the effect — a change reaching 4% of a metric's denominator produces a tight
+  interval near zero no matter how well it works. That is a **Stage 4 break wearing a null's
+  shape**, and it is invisible from here.
+
+  Run Steps 2 through 6 regardless. Step 5's own null criteria are a conjunction that includes
+  the metric being downstream of the mechanism *on the affected population* and the analysis
+  population matching the exposed one — neither of which can be checked without Steps 2 through
+  4. The screen cannot be executed on its own terms.
 - The interval **contains** the decision threshold → the test did not answer the question. A real,
   decision-relevant effect is compatible with this result. Continue; something is constraining
   detection.
