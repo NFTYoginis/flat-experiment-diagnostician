@@ -36,12 +36,20 @@ wrong. This case tests whether the folder can refuse a null that has the right s
 - [ ] **The comparison set's metric departure is identified**: all six prior tests read on
       return-completion rate and the subject reads on 30-day repeat purchase. The report must treat
       this as the observation the diagnosis rests on and **not** as a defect in the comparison set.
-- [ ] **Comparison-set integrity is Usable.**
+- [ ] **Comparison-set integrity is Usable with limitations.** The metric departure does two
+      things at once and both are true: it feeds the Stage 4 finding, and it genuinely closes
+      the Stage 3 floor, since a set reading entirely on return-completion cannot baseline what
+      sample this surface needs to resolve a repeat-purchase effect. `Same surface, same metric
+      family` is the first integrity axis in `rules.md` and it fails here. The report must not
+      resolve the tension by declaring the departure costless.
 - [ ] **Directional bias is stated on the missing run-2 ratio check**: a ratio failure inflates
       variance and widens intervals, whereas run 2's interval narrowed by precisely the predicted
       factor, so the gap pushes against a delivery break rather than toward one, and the conclusion
       survives the worst case.
-- [ ] Confidence is **Supported**.
+- [ ] Confidence is **Provisional**, tied to that integrity verdict. The cap binds whether or
+      not the finding needs the floor — and this one does not, since it rests on the 4.1%
+      denominator share and the affected-population interval, both measured. Stating that the
+      finding survives the gap is required; using it to lift the grade is not.
 
 ## Must not
 
