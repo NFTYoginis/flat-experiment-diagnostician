@@ -33,7 +33,7 @@ not answer the question.
 Run 2, at 4× the sample: +0.08pp, 95% CI **[−0.32, +0.48]**. This interval excludes the
 threshold, though barely, and the width behaved exactly as the sample increase predicts.
 
-The failure is not that the result was flat. It is that **no achievable sample would have let this
+The failure is not that the result was flat. It is that **no sample this test could have run at would have let this
 metric answer this question** — see the mechanism.
 
 ### Comparison set
@@ -85,7 +85,7 @@ survival to lift the grade.
 | 2. Exposure | Eliminated structurally | See below | Clean |
 | 3. Sensitivity | Half-width 0.40pp at 1,488,000 | Above the floor after the re-run | Clean after run 2 |
 | 4. Measurement | Affected population is 4.1% of the denominator | Return-initiators as a share of assigned | **Break** |
-| 5. Inference | Analysis population matches exposed; unit is user, as randomized | Readout definition | Clean |
+| 5. Inference | Analysis on all assigned while the change reaches 4.1% | Readout definition | **Starved** |
 
 **Stage 2 is eliminated structurally rather than comparatively.** Impressions on the redesigned
 flow were not logged, so exposure cannot be measured directly. It does not need to be:
