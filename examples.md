@@ -175,8 +175,8 @@ wrong finding with high confidence.
 
 ### Confidence
 
-**Supported.** The comparison set is Usable, the funnel locates the constraint, the
-affected-population readout separates the two live causes at the break stage, and the null was
+**Provisional.** The funnel locates the constraint, the affected-population readout separates the
+two live causes at the break stage, and the null was
 tested and rejected on structural grounds.
 
 ### Missing evidence
