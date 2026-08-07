@@ -83,7 +83,13 @@ It stops at the cause. What you do about it is your decision.
 ## Setup
 
 1. Create a Claude Project.
-2. Upload the contents of this folder to the project knowledge.
+2. Upload everything in this folder **except `tests/`** to the project knowledge.
+
+   `tests/` stays out deliberately. It holds the answer keys the regression cases are scored
+   against, and a diagnostician that can read its own expected outputs is not being tested by
+   them. It belongs in the repo, where a stranger can run the cases and check the result
+   against the key themselves. It does not belong in the project, where the folder under test
+   would be reading them.
 3. Paste this into the project's custom instructions:
 
    > Follow identity.md and rules.md exactly. Run the diagnostic sequence in rules.md in
