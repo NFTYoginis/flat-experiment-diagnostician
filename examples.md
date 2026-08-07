@@ -55,14 +55,27 @@ Detection floor: this surface has resolved effects down to **+1.8pp on return-co
 
 ### Comparison-set integrity
 
-**Usable.** Six prior tests, three with detected effects, matched on surface, randomization unit,
-population definition, and traffic period. No single test carries the floor: removing the
-refund-status page still leaves resolved effects at +2.1pp and +4.4pp.
+**Usable with limitations.** Six prior tests, three with detected effects, matched on surface,
+randomization unit, population definition, and traffic period. No single test carries the floor:
+removing the refund-status page still leaves resolved effects at +2.1pp and +4.4pp.
 
-One observation that is **not** a limitation and must not be read as one: all six prior tests read
-on return-completion rate, and the subject reads on site-wide 30-day repeat purchase. That is not
-a defect in the comparison set. It is the departure the diagnosis rests on, and the set is what
-makes it visible.
+The axis that fails is metric family, and it does two things at once. All six prior tests read on
+return-completion rate; the subject reads on site-wide 30-day repeat purchase.
+
+It is the departure the diagnosis rests on. The subject differs from six tests that share its
+surface, its unit, and its eligibility on exactly one axis, and that axis carries the finding. The
+set is what makes it visible.
+
+It is also a real gap in what the set can baseline. `Same surface, same metric family` is the first
+axis in the Step 0.5 check, and it fails here: a set reading entirely on return-completion cannot
+say what sample this surface needs to resolve a repeat-purchase effect. The Stage 3 floor quoted
+below is a floor for a different metric.
+
+Both are true, and the second does not stop being true because the first is useful. Per the
+integrity rung, confidence caps at Provisional — which binds whether or not the finding needs the
+floor, and this finding does not, since it rests on the 4.1% denominator share and the
+affected-population interval, both measured. Say the finding survives the gap. Do not use its
+survival to lift the grade.
 
 ### Funnel reconstruction
 
