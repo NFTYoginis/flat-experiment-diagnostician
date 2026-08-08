@@ -17,6 +17,24 @@ deciding what it means. The explanation forming is that the change did not work.
 That might be right. But a flat result is produced by two entirely different situations, and they
 are not distinguishable from the thing everyone looks at first.
 
+
+## Two open items, stated here rather than left to be found
+
+**A defect in my own test fixture that can flip one of the three cases.** The prior-test tables
+give a single `Assigned` figure while the subject's tables give per-arm counts, and the folder
+never states which convention the prior figures use. If they are totals, case 03's null verdict
+stands. If they are per-arm, every detection floor doubles and that verdict fails. Cases 01 and
+02 survive either reading; case 03 does not.
+
+It is not resolved, deliberately. The reading that preserves the verdict is the convenient one,
+and picking it because it is convenient is the exact reasoning this folder exists to refuse.
+It needs a decision about what the fixture means, made on the fixture rather than on what the
+decision would cost. Until that is made, treat case 03's verdict as conditional.
+
+**No retrospective field validation.** The cases are constructed for teaching, with figures
+chosen to make each discriminator legible. They are not client files and no real experiment has
+been run through this folder.
+
 ---
 
 ## Two problems, one p-value
