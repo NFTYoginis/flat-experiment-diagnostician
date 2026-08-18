@@ -1,12 +1,13 @@
 # Flat Experiment Diagnostician
 
-**v0.2** · Status: **four blind runs across three cases**, each run in a session that had never
-seen this folder and was forbidden from opening the answer keys, each scored line by line against
-assertions written before the run. One proved a key wrong; one found a routing defect in
-`rules.md` that had made a whole branch unreachable, here and in three sibling products. No
-retrospective field validation — every case here is constructed, and nothing has been checked
-against a real experiment with a known outcome. **One open defect is disclosed below and in
-[tests/RUNS.md](tests/RUNS.md); it can flip case 03's verdict.**
+**v0.2** · Status: **seven blind runs across three cases** — four originals and three re-runs
+against the folder as it ships — each in a session that had never seen this folder and was
+forbidden from opening the answer keys, each scored line by line against assertions written
+before the run. One proved a key wrong; one found a routing defect in `rules.md` that had made a
+whole branch unreachable, here and in three sibling products. No retrospective field validation —
+every case here is constructed, and nothing has been checked against a real experiment with a
+known outcome. **The two defects this line used to carry as open are now closed; what is still
+open is listed below, including that this product has no executable gate on its output.**
 
 A folder you drop into a Claude Project. Claude becomes a diagnostician that works out why an A/B
 test showed no effect.

@@ -1,9 +1,14 @@
 # Run record
 
-**4 blind runs, 3 cases.** Case 01 **22/22**. Case 02 the run was right and the key was wrong on
-the integrity grade; corrected. Case 03 is the family's first **Supported** null, reached by
-clearing five stages rather than by exhausting alternatives. A fourth run, a re-run, found the
-`rules.md` routing defect described below.
+**7 blind runs, 3 cases — 4 in the first pass, 3 re-runs against the folder as it ships.**
+
+First pass: Case 01 **22/22**. Case 02 the run was right and the key was wrong on the integrity
+grade; corrected. Case 03 is the family's first **Supported** null, reached by clearing five
+stages rather than by exhausting alternatives. A fourth run, a re-run, found the `rules.md`
+routing defect described below.
+
+Re-runs: all three pass, and they closed the repaired-key circularity. Two new defects fell out
+of them and are recorded below rather than fixed quietly.
 
 ## How these were run
 
