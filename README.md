@@ -18,18 +18,28 @@ That might be right. But a flat result is produced by two entirely different sit
 are not distinguishable from the thing everyone looks at first.
 
 
-## Two open items, stated here rather than left to be found
+## Open items, stated here rather than left to be found
 
-**A defect in my own test fixture that can flip one of the three cases.** The prior-test tables
-give a single `Assigned` figure while the subject's tables give per-arm counts, and the folder
-never states which convention the prior figures use. If they are totals, case 03's null verdict
-stands. If they are per-arm, every detection floor doubles and that verdict fails. Cases 01 and
-02 survive either reading; case 03 does not.
+**A fixture ambiguity that could have flipped one of the three cases — closed.** The prior-test
+tables gave a single `Assigned` figure while the subject's tables gave per-arm counts, and the
+folder never stated which convention the prior figures used. Under one reading every detection
+floor doubled and case 03's verdict failed; under the other it stood.
 
-It is not resolved, deliberately. The reading that preserves the verdict is the convenient one,
-and picking it because it is convenient is the exact reasoning this folder exists to refuse.
-It needs a decision about what the fixture means, made on the fixture rather than on what the
-decision would cost. Until that is made, treat case 03's verdict as conditional.
+It is now decided, in [`reference/prior-test-tables.md`](reference/prior-test-tables.md), and
+**every case file states its convention inline** — which is the part that actually closes it. A
+ruling in a reference file that the fixtures do not repeat leaves the next reader to reconstruct
+the same argument.
+
+Two things about how it was decided, because the order is the only thing that makes it
+checkable rather than asserted. The rationale went in **before** anything was recomputed, in its
+own commit, and it argues from what the fixture represents — the unit of a table row, where the
+document splits by arm and where it does not, and what artifact these tables imitate. It does
+not argue from what the decision would cost. `git log` shows the two commits and their order.
+
+The recomputation that followed changed no figure anywhere. Every computation in the folder had
+already been summing the subject's arms and reading prior figures as totals; the arithmetic was
+consistent throughout and the convention was written down nowhere. That is the defect that was
+open — an undocumented convention, not a wrong number.
 
 **No retrospective field validation.** The cases are constructed for teaching, with figures
 chosen to make each discriminator legible. They are not client files and no real experiment has

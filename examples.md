@@ -1,5 +1,10 @@
 # Examples
 
+> **Reading the samples below.** Subject figures are stated as test totals; the case
+> files they come from give them per arm, two columns. Prior-test figures are each
+> test's total. Both sides of every floor comparison are totals — see
+> `reference/prior-test-tables.md`.
+
 Three worked cases. They show the reasoning, not just the conclusion.
 
 The cases are constructed for teaching, with figures chosen to make each discriminator legible.

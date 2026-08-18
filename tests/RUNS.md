@@ -38,16 +38,16 @@ fault with the demonstration layer is not reaching the layer that governs. This 
 
 ## What is still open
 
-**The `Assigned` convention is stated nowhere, and it can flip case 03.** Subject tables give a
-figure per arm — two columns, control and variant. The prior-test tables give a single `Assigned`
-figure per row, and nothing in the fixture or the method says whether that number is the total
-across both arms or the count in each. If it is per-arm, every detection floor computed from those
-rows doubles, and case 03's **Supported** null does not survive the comparison it rests on. Cases
-01 and 02 read the same either way.
+**The `Assigned` convention — closed.** Subject tables give a figure per arm; prior-test tables
+give one figure per test. Nothing said which was which, and under one reading every detection
+floor doubled. It is ruled in [`reference/prior-test-tables.md`](../reference/prior-test-tables.md)
+and **stated inline in every case file**, which is the part that closes it.
 
-This is unresolved and is not being resolved by picking the reading that preserves the verdict,
-which is the reasoning this folder exists to refuse. It needs a decision about what the fixture
-means, made on the fixture rather than on its consequences, and then stated in the fixture.
+The rationale was committed before anything was recomputed, in its own commit, and argues from
+the fixture rather than from what the ruling would cost — `git log` shows the order. The
+recomputation that followed changed no figure: every computation in the folder had already been
+summing the subject's arms and reading prior figures as totals. The defect was an undocumented
+convention, not a wrong number.
 
 **The corrected keys have been fixed but not re-run.** A key repaired after a run now agrees with
 that run by construction, which is the same circularity as a key written from spec. Closing it

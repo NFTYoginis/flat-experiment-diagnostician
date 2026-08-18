@@ -20,6 +20,8 @@ fixed global order.
 
 ## The readout
 
+> **`Assigned` is per arm.** The arms are the columns. The test's total is the sum across them. See `reference/prior-test-tables.md`.
+
 | | Control | Variant |
 |---|---|---|
 | Assigned | 620,000 | 620,000 |
@@ -48,6 +50,8 @@ The team states: "We'd have shipped at **+0.40pp** on checkout completion. The o
 be maintained across 14 locales with different payment mixes, and finance set that as the bar."
 
 ## Prior tests on this surface
+
+> **`Assigned` is each test's total across both arms.** Each row is one test, and the figure is a property of the test. To compare the subject against this set, sum the subject's arms first. See `reference/prior-test-tables.md`.
 
 All on checkout, same randomization unit, same eligibility definition, comparable traffic periods,
 all read on checkout completion rate.

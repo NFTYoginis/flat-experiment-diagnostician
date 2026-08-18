@@ -13,6 +13,8 @@ returns window.
 
 ## Run 1
 
+> **`Assigned` is per arm.** The arms are the columns. The test's total is the sum across them. See `reference/prior-test-tables.md`.
+
 | | Control | Variant |
 |---|---|---|
 | Assigned | 186,000 | 186,000 |
@@ -66,6 +68,8 @@ population):
 Repeat-purchase difference among return-initiators: **+8.3pp**, 95% CI **[+4.9, +11.7]**.
 
 ## Prior tests on this surface
+
+> **`Assigned` is each test's total across both arms.** Each row is one test, and the figure is a property of the test. To compare the subject against this set, sum the subject's arms first. See `reference/prior-test-tables.md`.
 
 All on the returns flow, same randomization unit, same eligibility definition, comparable traffic
 periods. All read on **return-completion rate**.
