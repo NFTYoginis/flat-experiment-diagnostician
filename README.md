@@ -41,6 +41,18 @@ already been summing the subject's arms and reading prior figures as totals; the
 consistent throughout and the convention was written down nowhere. That is the defect that was
 open — an undocumented convention, not a wrong number.
 
+**The corrected keys have been re-run blind — closed.** Repaired keys were never re-run, and a
+key repaired after a run agrees with that run by construction. All three cases were run again
+against the folder as it ships; receipts are in [`runs/`](runs/), prediction committed before
+transcript in every case. The case whose key had been repaired had the repair's reasoning
+reproduced independently by a session that never saw it. Two new defects fell out and are logged
+in [`tests/RUNS.md`](tests/RUNS.md).
+
+**No executable gate on this product's output.** The nine-gate verifier built for
+`listing-stall-diagnostician` is deliberately not copied here — extruding it across the family is
+gated on that build passing a cold gate run by a session that did not build it. Until then these
+runs carry a hash pin where a verifier output would go, and say so.
+
 **No retrospective field validation.** The cases are constructed for teaching, with figures
 chosen to make each discriminator legible. They are not client files and no real experiment has
 been run through this folder.

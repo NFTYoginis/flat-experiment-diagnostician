@@ -49,10 +49,26 @@ recomputation that followed changed no figure: every computation in the folder h
 summing the subject's arms and reading prior figures as totals. The defect was an undocumented
 convention, not a wrong number.
 
-**The corrected keys have been fixed but not re-run.** A key repaired after a run now agrees with
-that run by construction, which is the same circularity as a key written from spec. Closing it
-means running those cases again, blind, against the corrected key. In the sibling
-`review-rejection-diagnostician` this was done, and the re-run found a fresh contradiction the
-first repair had left behind — so the circularity here should be assumed live, not cosmetic.
+**The corrected keys — re-run, and the circularity closed.** A key repaired after a run agrees
+with that run by construction, so all three cases were run again blind against the folder as it
+now ships. Receipts in [`../runs/`](../runs/): prediction committed first, transcript verbatim,
+scoring, hash pin.
+
+All three pass. The one that carried the circularity is case 02, whose key was repaired in
+`fff5bb9` after a run beat it on the integrity grade. A fresh session with no access to that key
+reproduced the repair's own argument — the metric-family axis doing two things at once, the
+floor being a floor for a different metric, the cap binding rather than advisory — which is what
+turns agreement into evidence instead of tautology.
+
+The re-runs also found two things. The case-02 key requires the metric departure to be held as
+both finding and set defect but never asks which direction the defect pushes; the run stated it
+unprompted and `rules.md` asks for it everywhere else. And a re-run key written this session
+asserted "Stage 4, inference" where Stage 4 is measurement. That is the fourth key in this family
+to be wrong, and the pattern is not that keys are hard — a key written without re-reading the
+contract inherits whatever its author half-remembers of it.
+
+**Still open:** these runs have no `verify-output.txt`, because this product has no verifier.
+Building one is gated on `listing-stall-diagnostician` passing a cold gate. See
+[`../runs/README.md`](../runs/README.md).
 
 `tests/` is deliberately excluded from what you upload into a Claude Project. See the README.
